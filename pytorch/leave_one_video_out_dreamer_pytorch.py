@@ -20,7 +20,7 @@ from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 # 导入提供的模型
-from models.cnn_2d_model_pytorch import CnnTwoDimensionModel
+from pytorch.cnn_2d_model_pytorch import CnnTwoDimensionModel
 
 # 设置随机种子以确保结果可复现
 torch.manual_seed(42)
