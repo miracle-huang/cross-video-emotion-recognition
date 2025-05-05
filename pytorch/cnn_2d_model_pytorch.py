@@ -24,7 +24,7 @@ class CnnTwoDimensionModel(nn.Module):
         self.learning_rate = learning_rate
         
         # 构建模型层
-        self.conv1 = nn.Conv2d(8, self.filters[0], self.kernel_size_list[0], padding='same')
+        self.conv1 = nn.Conv2d(4, self.filters[0], self.kernel_size_list[0], padding='same')
         self.bn1 = nn.BatchNorm2d(self.filters[0])
         self.dropout1 = nn.Dropout(self.dropout_rate)
         
@@ -42,7 +42,6 @@ class CnnTwoDimensionModel(nn.Module):
         self.dropout4 = nn.Dropout(self.dropout_rate)
         
         # 计算展平后的特征维度
-        # 假设输入为(8, 9, 8)，经过MaxPooling2D(2, 2)后变为(4, 4, filters[0])
         flattened_size = (8 // 2) * (9 // 2) * self.filters[0]
         
         self.dense1 = nn.Linear(flattened_size, 512)

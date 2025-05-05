@@ -36,7 +36,7 @@ kernel_size_list = [(3, 3), (3, 3), (3, 3), (1, 1)]  # 卷积核大小
 dropout_rate = 0.2
 learning_rate = 0.05
 batch_size = 32
-epochs = 100
+epochs = 1
 
 # 早停参数
 patience = 20  # 如果验证集性能在这么多个epoch内没有提升，则停止训练
@@ -392,7 +392,7 @@ def update_and_save_results(results, results_file):
 # 主函数
 def main():
     # 数据目录
-    data_dir = "cross-video-emotion-recognition/dataset/Dreamer/processed_de_psd"  # 请替换为实际数据目录
+    data_dir = "dataset/Dreamer/processed_de"  # 请替换为实际数据目录
     
     # 结果保存路径
     results_file = "emotion_recognition_results.xlsx"
@@ -482,10 +482,31 @@ def main():
             # 计算混淆矩阵
             cm = confusion_matrix(y_true, y_pred)
 
-            # 提取混淆矩阵中的值
-            # 假设是二分类问题，混淆矩阵为2x2
-            # [[TN, FP], [FN, TP]]
-            tn, fp, fn, tp = cm.ravel()
+            # 打印原始混淆矩阵，便于调试
+            print(f"Confusion Matrix:\n{cm}")
+            
+            # 根据混淆矩阵的形状来正确提取值
+            if cm.shape == (2, 2):  # 标准2x2混淆矩阵
+                tn, fp, fn, tp = cm.ravel()
+            elif cm.shape == (1, 1):  # 只有一个类别的情况
+                # 确定唯一的类别
+                unique_label = np.unique(y_true)[0] if len(np.unique(y_true)) > 0 else np.unique(y_pred)[0]
+                if unique_label == 0:  # 如果只有负类
+                    tn = cm[0, 0]
+                    fp, fn, tp = 0, 0, 0
+                else:  # 如果只有正类
+                    tp = cm[0, 0]
+                    tn, fp, fn = 0, 0, 0
+            else:  # 处理其他可能的形状
+                print(f"Unusual confusion matrix shape: {cm.shape}")
+                # 尝试从现有矩阵中提取值
+                tn = cm[0, 0] if cm.shape[0] > 0 and cm.shape[1] > 0 else 0
+                fp = cm[0, 1] if cm.shape[0] > 0 and cm.shape[1] > 1 else 0
+                fn = cm[1, 0] if cm.shape[0] > 1 and cm.shape[1] > 0 else 0
+                tp = cm[1, 1] if cm.shape[0] > 1 and cm.shape[1] > 1 else 0
+            
+            # 打印提取的值，便于验证
+            print(f"Extracted values - TN: {tn}, FP: {fp}, FN: {fn}, TP: {tp}")
             
             # 存储结果
             if emotion_dim == 'arousal':

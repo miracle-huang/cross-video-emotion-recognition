@@ -9,6 +9,10 @@ import matplotlib.pyplot as plt
 from scipy.signal import butter, lfilter
 from scipy.io import loadmat
 
+import sys
+from os import path
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+
 import config
 
 def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
@@ -115,15 +119,15 @@ def process_video_data(file):
         channel_data = trial_data[:, channel]
         channel_base_data = base_data[:, channel]
 
-        # # 初始化基线DE和PSD数组
-        # de_theta_base = np.zeros(shape=[0], dtype=float)
-        # de_alpha_base = np.zeros(shape=[0], dtype=float)
-        # de_beta_base = np.zeros(shape=[0], dtype=float)
-        # de_gamma_base = np.zeros(shape=[0], dtype=float)
-        # psd_theta_base = np.zeros(shape=[0], dtype=float)
-        # psd_alpha_base = np.zeros(shape=[0], dtype=float)
-        # psd_beta_base = np.zeros(shape=[0], dtype=float)
-        # psd_gamma_base = np.zeros(shape=[0], dtype=float)
+        # 初始化基线DE和PSD数组
+        de_theta_base = np.zeros(shape=[0], dtype=float)
+        de_alpha_base = np.zeros(shape=[0], dtype=float)
+        de_beta_base = np.zeros(shape=[0], dtype=float)
+        de_gamma_base = np.zeros(shape=[0], dtype=float)
+        psd_theta_base = np.zeros(shape=[0], dtype=float)
+        psd_alpha_base = np.zeros(shape=[0], dtype=float)
+        psd_beta_base = np.zeros(shape=[0], dtype=float)
+        psd_gamma_base = np.zeros(shape=[0], dtype=float)
         
         # 初始化用于DE和PSD数组的numpy数组
         de_theta = np.zeros(shape=[0], dtype=float)
@@ -139,24 +143,24 @@ def process_video_data(file):
         window_data_list = segment_signal(channel_data, config.window_size, config.overlap)
         window_base_data_list = segment_signal(channel_base_data, config.window_size, config.overlap)
 
-        # for window_data in window_base_data_list:
-        #     '''计算基线的平均DE和PSD'''
-        #     # 进行带通滤波
-        #     theta_eeg = butter_bandpass_filter(window_data, 4, 8, frequency)
-        #     alpha_eeg = butter_bandpass_filter(window_data, 8, 14, frequency)
-        #     beta_eeg = butter_bandpass_filter(window_data, 14, 31, frequency)
-        #     gamma_eeg = butter_bandpass_filter(window_data, 31, 45, frequency)
+        for window_data in window_base_data_list:
+            '''计算基线的平均DE和PSD'''
+            # 进行带通滤波
+            theta_eeg = butter_bandpass_filter(window_data, 4, 8, frequency)
+            alpha_eeg = butter_bandpass_filter(window_data, 8, 14, frequency)
+            beta_eeg = butter_bandpass_filter(window_data, 14, 31, frequency)
+            gamma_eeg = butter_bandpass_filter(window_data, 31, 45, frequency)
 
-        #     # 计算DE和PSD
-        #     de_theta_base = np.append(de_theta_base, compute_DE(theta_eeg))
-        #     de_alpha_base = np.append(de_alpha_base, compute_DE(alpha_eeg))
-        #     de_beta_base = np.append(de_beta_base, compute_DE(beta_eeg))
-        #     de_gamma_base = np.append(de_gamma_base, compute_DE(gamma_eeg))
+            # 计算DE和PSD
+            de_theta_base = np.append(de_theta_base, compute_DE(theta_eeg))
+            de_alpha_base = np.append(de_alpha_base, compute_DE(alpha_eeg))
+            de_beta_base = np.append(de_beta_base, compute_DE(beta_eeg))
+            de_gamma_base = np.append(de_gamma_base, compute_DE(gamma_eeg))
 
-        #     psd_theta_base = np.append(psd_theta_base, compute_PSD(theta_eeg))
-        #     psd_alpha_base = np.append(psd_alpha_base, compute_PSD(alpha_eeg))
-        #     psd_beta_base = np.append(psd_beta_base, compute_PSD(beta_eeg))
-        #     psd_gamma_base = np.append(psd_gamma_base, compute_PSD(gamma_eeg))
+            psd_theta_base = np.append(psd_theta_base, compute_PSD(theta_eeg))
+            psd_alpha_base = np.append(psd_alpha_base, compute_PSD(alpha_eeg))
+            psd_beta_base = np.append(psd_beta_base, compute_PSD(beta_eeg))
+            psd_gamma_base = np.append(psd_gamma_base, compute_PSD(gamma_eeg))
 
         for window_data in window_data_list:
             # 进行带通滤波
@@ -227,7 +231,7 @@ def process_video_data(file):
     print("Saved processed video data to cross-video-emotion-recognition/dataset/Dreamer/processed_psd/video_{}.mat.".format(video_number))
 
 if __name__ == "__main__":
-    directory_path = "cross-video-emotion-recognition/dataset/Dreamer/videos"
+    directory_path = "dataset/Dreamer/videos"
 
     # 使用 glob 模块查找所有 .mat 文件
     mat_files = glob.glob(os.path.join(directory_path, "*.mat"))

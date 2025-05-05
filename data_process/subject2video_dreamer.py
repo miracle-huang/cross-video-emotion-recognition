@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io as sio
 from collections import defaultdict
 
-dreamer_dataset = sio.loadmat('cross-video-emotion-recognition/dataset/Dreamer/DREAMER.mat')
+dreamer_dataset = sio.loadmat('cross-video-emotion-recognition/dataset/Dreamer/DREAMER.mat')    
 
 dreamer_struct = dreamer_dataset['DREAMER']
 dreamer_data = dreamer_struct[0, 0]['Data']
