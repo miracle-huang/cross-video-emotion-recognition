@@ -36,7 +36,7 @@ kernel_size_list = [(3, 3), (3, 3), (3, 3), (1, 1)]  # 卷积核大小
 dropout_rate = 0.2
 learning_rate = 0.05
 batch_size = 32
-epochs = 1
+epochs = 20
 
 # 早停参数
 patience = 20  # 如果验证集性能在这么多个epoch内没有提升，则停止训练
