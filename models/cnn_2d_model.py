@@ -26,16 +26,17 @@ class CnnTwoDimensionModel:
     dropout_rate - from config
     learning_rate - from config
     '''
-    def __init__(self, filters, kernel_size_list, dropout_rate, learning_rate):
+    def __init__(self, filters, kernel_size_list, dropout_rate, learning_rate, input_shape):
         self.filters = filters
         self.kernel_size_list = kernel_size_list
         self.dropout_rate = dropout_rate
         self.learning_rate = learning_rate
+        self.input_shape = input_shape
 
     def create_2d_cnn_model(self):
         # create base network
         seq = Sequential()
-        seq.add(Conv2D(self.filters[0], self.kernel_size_list[0], activation='relu', padding='same', name='conv1', input_shape=(8, 9, 8)))
+        seq.add(Conv2D(self.filters[0], self.kernel_size_list[0], activation='relu', padding='same', name='conv1', input_shape=self.input_shape))
         seq.add(BatchNormalization())
         seq.add(Dropout(self.dropout_rate))
         seq.add(Conv2D(self.filters[1], self.kernel_size_list[1], activation='relu', padding='same', name='conv2'))
@@ -54,7 +55,7 @@ class CnnTwoDimensionModel:
         seq.add(BatchNormalization())
         seq.add(Dropout(self.dropout_rate))
 
-        input_layer = Input(shape=(8, 9, 8))
+        input_layer = Input(shape=self.input_shape)
         x = seq(input_layer)
         x = Flatten(name='flat')(x)
         out = Dense(2, activation='softmax', name='out')(x)

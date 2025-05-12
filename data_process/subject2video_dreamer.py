@@ -2,7 +2,7 @@ import numpy as np
 import scipy.io as sio
 from collections import defaultdict
 
-dreamer_dataset = sio.loadmat('cross-video-emotion-recognition/dataset/Dreamer/DREAMER.mat')    
+dreamer_dataset = sio.loadmat('dataset/Dreamer/DREAMER.mat')    
 
 dreamer_struct = dreamer_dataset['DREAMER']
 dreamer_data = dreamer_struct[0, 0]['Data']
@@ -47,7 +47,7 @@ def subject2video():
             'EEG': video_data[video_index],
             'Baseline': baseline_data[video_index],
         }
-        sio.savemat('cross-video-emotion-recognition/dataset/Dreamer/videos/video_{}.mat'.format(video_index), data)
+        sio.savemat('dataset/Dreamer/videos/video_{}.mat'.format(video_index), data)
         print("Saved video {} data to file.".format(video_index))
 
 if __name__ == "__main__":
