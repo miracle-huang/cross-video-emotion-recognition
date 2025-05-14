@@ -29,8 +29,7 @@ class BaseDataLoader:
             short_name = f'{i:02}'
             print("\nprocessing: ", short_name, "......") 
 
-            # file_path = os.path.join(self.dataset_dir, 'DE_video' + short_name) # The file path of specific content
-            file_path = os.path.join(self.dataset_dir, 'PSD_video' + short_name) 
+            file_path = os.path.join(self.dataset_dir, 'DE_video' + short_name) # The file path of specific content
             file = sio.loadmat(file_path)
             data = file['data'] # All data
             y_v = file['valence_labels'][0] # valence label
@@ -49,6 +48,11 @@ class BaseDataLoader:
             # One-Hot Encoding num_classes=2
             y_v = to_categorical(y_v, 2)
             y_a = to_categorical(y_a, 2)
+
+            # Combine the DE data and PSD data
+            psd_file_path = os.path.join(self.dataset_dir, 'PSD_video' + short_name)
+            psd_file = sio.loadmat(psd_file_path)
+            data = np.concatenate([data, psd_file['data']], axis=1)
 
             # Sort the loaded data into a form suitable for neural network training
             one_content_x = data.transpose([0, 2, 3, 1]) # data in one content
