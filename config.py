@@ -22,10 +22,10 @@ DEAP_half_arousal_low = [26, 22, 28, 16, 15, 12, 17, 23, 29, 21, 27, 13, 25, 18,
 DEAP_half_arousal_high = [11, 8, 31, 6, 39, 10, 19, 1, 7, 37, 35, 9, 38, 34, 36, 4, 3, 5, 2, 32]
 
 # DEAP dataset path
-DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
+DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/psd/"
 
 # model parameters
-epoch = 50
+epoch = 100
 batch_size = 256
 filters = [64, 128, 256]
 kernel_size_list = [3, 3, 3, 1]
