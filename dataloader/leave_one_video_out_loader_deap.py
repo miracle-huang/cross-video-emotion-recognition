@@ -65,7 +65,7 @@ class LeaveOneVideoOutLoader(BaseDataLoader):
         
         return normalized_tensor, min_val, max_val
 
-    def load_data(self):
+    def load_data(self, dataset_name='DEAP'):
         random.seed(self.random_seed)
 
         # Initialize the dicts used to store train, val, and test data
@@ -73,8 +73,8 @@ class LeaveOneVideoOutLoader(BaseDataLoader):
         val_data = {'y_a_val': [], 'y_v_val': [], 'x_val': []}
         test_data = {'y_a_test': [], 'y_v_test': [], 'x_test': []}
 
-        y_a_test, y_v_test, x_test = super().processing_data_in_content_list(self.test_content_list)
-        y_a_, y_v_, x_ = super().processing_data_in_content_list(self.train_content_list) # y_a_, y_v_, x_ include train and val
+        y_a_test, y_v_test, x_test = super().processing_data_in_content_list(self.test_content_list, dataset_name) # y_a_test, y_v_test, x_test include test data
+        y_a_, y_v_, x_ = super().processing_data_in_content_list(self.train_content_list, dataset_name) # y_a_, y_v_, x_ include train and val
 
         # Divide training set and verification set in 8:2
         all_data_size = len(x_)
@@ -94,14 +94,14 @@ class LeaveOneVideoOutLoader(BaseDataLoader):
         test_data['y_v_test'] = y_v_test
 
         # 对训练数据进行非零值归一化，并获取归一化参数
-        train_data['x_train'], min_val, max_val = self.normalize_non_zero_values_with_stats(train_data['x_train'])
+        # train_data['x_train'], min_val, max_val = self.normalize_non_zero_values_with_stats(train_data['x_train'])
 
         # 使用训练集的min_val和max_val对验证集和测试集进行归一化
-        val_data['x_val'], _, _ = self.normalize_non_zero_values_with_stats(val_data['x_val'], min_val, max_val)
-        test_data['x_test'], _, _ = self.normalize_non_zero_values_with_stats(test_data['x_test'], min_val, max_val)
+        # val_data['x_val'], _, _ = self.normalize_non_zero_values_with_stats(val_data['x_val'], min_val, max_val)
+        # test_data['x_test'], _, _ = self.normalize_non_zero_values_with_stats(test_data['x_test'], min_val, max_val)
 
         return train_data, val_data, test_data
     
 if __name__ == '__main__':
-    leave_one_video_out_loader = LeaveOneVideoOutLoader(config.DEAP_dataset_path, 42, config.DEAP_all_videos_list, [1])
-    train_data, val_data, test_data = leave_one_video_out_loader.load_data()
+    leave_one_video_out_loader = LeaveOneVideoOutLoader(config.AMIGO_dataset_path, 42, config.AMIGO_all_videos_list, [1])
+    train_data, val_data, test_data = leave_one_video_out_loader.load_data(dataset_name='AMIGO')

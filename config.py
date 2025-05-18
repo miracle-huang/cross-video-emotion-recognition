@@ -9,6 +9,12 @@ DREAMER_video_arousal_ratings = [2.26, 3.00, 3.83, 4.26, 3.70, 3.83, 3.17, 3.96,
 DREAMER_video_valence_labels = [1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0]
 DREAMER_video_arousal_labels = [0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1]
 
+AMIGO_video_valence_ratings = [6.99, 7.58, 3.74, 7.14, 3.88, 3.56, 3.46, 3.55, 3.3, 2.91, 3.15, 5.81, 6.75, 6.93, 7.64, 6.34]
+AMIGO_video_arousal_ratings = [4.08, 4.23, 4.12, 3.84, 4.42, 5.15, 5.01, 6.79, 6.0, 5.59, 6.52, 5.64, 6.05, 4.38, 5.5, 5.53]
+AMIGO_video_valence_labels = [1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
+AMIGO_video_arousal_labels = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1]
+AMIGO_all_videos_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+
 # valence and arousal content lists in DEAP dataset
 # A complete list of valence and arousal order, from low to high
 DEAP_all_videos_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40]
@@ -21,8 +27,9 @@ DEAP_half_valence_high = [16, 27, 17, 7, 15, 5, 12, 2, 20, 6, 13, 1, 4, 8, 19, 9
 DEAP_half_arousal_low = [26, 22, 28, 16, 15, 12, 17, 23, 29, 21, 27, 13, 25, 18, 24, 40, 33, 20, 14, 30]
 DEAP_half_arousal_high = [11, 8, 31, 6, 39, 10, 19, 1, 7, 37, 35, 9, 38, 34, 36, 4, 3, 5, 2, 32]
 
-# DEAP dataset path
+# dataset path
 DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
+AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data"
 
 # model parameters
 epoch = 100

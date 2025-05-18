@@ -66,7 +66,7 @@ class CnnTwoDimensionTrainer(BaseTrainer):
         predictions = self.model.predict([x_test])
         y_pred = np.argmax(predictions, axis=1)
         y_true = np.argmax(y_test, axis=1)
-        conf_matrix = confusion_matrix(y_true, y_pred)
+        conf_matrix = confusion_matrix(y_true, y_pred, labels=[0, 1])
         f1 = f1_score(y_true, y_pred, average='weighted')
 
         return acc_output, conf_matrix, f1

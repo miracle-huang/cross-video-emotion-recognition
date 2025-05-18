@@ -6,7 +6,8 @@ import glob
 import numpy as np
 import scipy.io as sio
 import matplotlib.pyplot as plt
-from scipy.signal import butter, lfilter
+from scipy.integrate import simpson as simps
+from scipy.signal import butter, lfilter, welch
 from scipy.io import loadmat
 
 import sys
@@ -48,16 +49,32 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
 # 读取文件
 def read_file(file):
     data = sio.loadmat(file)
-    trial_data = data['EEG']
-    base_data = data['Baseline']
-    return trial_data, base_data
+    video_data = data['video_data']
+    return video_data
 
 def compute_DE(signal):
     variance = np.var(signal, ddof=1)
     return math.log(2 * math.pi * math.e * variance) / 2
 
-def compute_PSD(signal):
-    return np.sum(signal**2)
+def compute_PSD(window_signal, low, high, fs=128):
+    # 1. 计算功率谱密度 (PSD)
+    # 对于0.5秒窗口(64个点)，使用适当的nperseg值
+    # nperseg=64会给出单一窗口估计，nperseg=32会有更好的频率分辨率但更多方差
+    freqs, psd = welch(window_signal, fs=fs, nperseg=64, 
+                             scaling='density', average='mean')
+    
+    # 根据波段范围 (14-31Hz) 确定PSD中对应的频率索引
+    # 虽然信号已经过滤波，但我们仍需要确定PSD中对应的频率索引
+    idx_band = np.logical_and(freqs >= low, freqs <= high)
+    
+    # 3. 计算频率分辨率，即功率谱密度(PSD)中相邻频率点之间的间隔。
+    freq_res = freqs[1] - freqs[0]
+    
+    # 4. 使用Simpson积分法计算β波段功率
+    # 如果滤波非常精确，这基本上是整个PSD的积分
+    beta_power = simps(psd[idx_band], dx=freq_res)
+    
+    return beta_power  # 返回单个数值
 
 # 划分窗口
 def segment_signal(signal, window_size, overlap):
@@ -89,12 +106,11 @@ def array_1Dto2D(data_list):
     for window_data in data_list:
         data_2D = data_1Dto2D(window_data)
         list_2D.append(data_2D)
-    
+
     return np.array(list_2D)
 
 def process_video_data(file):
-    trial_data, base_data = read_file(file)
-    # 使用正则表达式提取视频编号
+    video_data = read_file(file)
     match = re.search(r'video_(\d+)\.mat', file)
     video_number = None
     if match:
@@ -114,20 +130,8 @@ def process_video_data(file):
     all_psd_gamma = []
 
     for channel in range(14):
-        # 选择通道
-        channel_data = trial_data[:, channel]
-        channel_base_data = base_data[:, channel]
+        channel_data = video_data[channel]
 
-        # 初始化基线DE和PSD数组
-        de_theta_base = np.zeros(shape=[0], dtype=float)
-        de_alpha_base = np.zeros(shape=[0], dtype=float)
-        de_beta_base = np.zeros(shape=[0], dtype=float)
-        de_gamma_base = np.zeros(shape=[0], dtype=float)
-        psd_theta_base = np.zeros(shape=[0], dtype=float)
-        psd_alpha_base = np.zeros(shape=[0], dtype=float)
-        psd_beta_base = np.zeros(shape=[0], dtype=float)
-        psd_gamma_base = np.zeros(shape=[0], dtype=float)
-        
         # 初始化用于DE和PSD数组的numpy数组
         de_theta = np.zeros(shape=[0], dtype=float)
         de_alpha = np.zeros(shape=[0], dtype=float)
@@ -140,26 +144,6 @@ def process_video_data(file):
 
         # 划分窗口
         window_data_list = segment_signal(channel_data, config.window_size, config.overlap)
-        window_base_data_list = segment_signal(channel_base_data, config.window_size, config.overlap)
-
-        for window_data in window_base_data_list:
-            '''计算基线的平均DE和PSD'''
-            # 进行带通滤波
-            theta_eeg = butter_bandpass_filter(window_data, 4, 8, frequency)
-            alpha_eeg = butter_bandpass_filter(window_data, 8, 14, frequency)
-            beta_eeg = butter_bandpass_filter(window_data, 14, 31, frequency)
-            gamma_eeg = butter_bandpass_filter(window_data, 31, 45, frequency)
-
-            # 计算DE和PSD
-            de_theta_base = np.append(de_theta_base, compute_DE(theta_eeg))
-            de_alpha_base = np.append(de_alpha_base, compute_DE(alpha_eeg))
-            de_beta_base = np.append(de_beta_base, compute_DE(beta_eeg))
-            de_gamma_base = np.append(de_gamma_base, compute_DE(gamma_eeg))
-
-            psd_theta_base = np.append(psd_theta_base, compute_PSD(theta_eeg))
-            psd_alpha_base = np.append(psd_alpha_base, compute_PSD(alpha_eeg))
-            psd_beta_base = np.append(psd_beta_base, compute_PSD(beta_eeg))
-            psd_gamma_base = np.append(psd_gamma_base, compute_PSD(gamma_eeg))
 
         for window_data in window_data_list:
             # 进行带通滤波
@@ -174,10 +158,10 @@ def process_video_data(file):
             de_beta = np.append(de_beta, compute_DE(beta_eeg))
             de_gamma = np.append(de_gamma, compute_DE(gamma_eeg))
 
-            psd_theta = np.append(psd_theta, compute_PSD(theta_eeg))
-            psd_alpha = np.append(psd_alpha, compute_PSD(alpha_eeg))
-            psd_beta = np.append(psd_beta, compute_PSD(beta_eeg))
-            psd_gamma = np.append(psd_gamma, compute_PSD(gamma_eeg))
+            psd_theta = np.append(psd_theta, compute_PSD(theta_eeg, 4, 8))
+            psd_alpha = np.append(psd_alpha, compute_PSD(alpha_eeg, 8, 14))
+            psd_beta = np.append(psd_beta, compute_PSD(beta_eeg, 14, 31))
+            psd_gamma = np.append(psd_gamma, compute_PSD(gamma_eeg, 31, 45))
 
         all_de_theta.append(de_theta)
         all_de_alpha.append(de_alpha)
@@ -216,21 +200,23 @@ def process_video_data(file):
         array_psd_beta_2D,
         array_psd_gamma_2D
     ]
-    # shape: window_num*8((DE+PSD)*4brainwave)*8*9
-    video_data = np.stack(arrays_to_stack, axis=1)
-    arousal_labels = np.repeat(config.DREAMER_video_arousal_labels[int(video_number) - 1], video_data.shape[0])
-    valence_labels = np.repeat(config.DREAMER_video_valence_labels[int(video_number) - 1], video_data.shape[0])
+
+    # shape: window_num*8*9*8((DE+PSD)*4brainwave)
+    video_data_2d = np.stack(arrays_to_stack, axis=3)
+    arousal_labels = np.repeat(config.AMIGO_video_arousal_labels[int(video_number) - 1], video_data_2d.shape[0])
+    valence_labels = np.repeat(config.AMIGO_video_valence_labels[int(video_number) - 1], video_data_2d.shape[0])
 
     processed_data = {
-        'video_data': video_data,
+        'data': video_data_2d,
         'arousal_labels': arousal_labels,
         'valence_labels': valence_labels
     }
-    sio.savemat('cross-video-emotion-recognition/dataset/Dreamer/processed_psd/video_{}.mat'.format(video_number), processed_data)
-    print("Saved processed video data to cross-video-emotion-recognition/dataset/Dreamer/processed_psd/video_{}.mat.".format(video_number))
-
+    result_dir = 'dataset/amigo/processed_data/'
+    sio.savemat(result_dir + "PSD_video" + str(video_number).zfill(2), processed_data)
+    print("Saved video {} processed video data.".format(video_number))
+        
 if __name__ == "__main__":
-    directory_path = "dataset/Dreamer/videos"
+    directory_path = "dataset/amigo/videos"
 
     # 使用 glob 模块查找所有 .mat 文件
     mat_files = glob.glob(os.path.join(directory_path, "*.mat"))
