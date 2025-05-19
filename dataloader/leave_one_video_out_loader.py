@@ -9,7 +9,7 @@ import numpy as np
 import scipy.io as sio
 from tensorflow.keras.utils import to_categorical
 
-from dataloader.base_data_loader_deap import BaseDataLoader
+from dataloader.base_data_loader import BaseDataLoader
 import config
 
 class LeaveOneVideoOutLoader(BaseDataLoader):

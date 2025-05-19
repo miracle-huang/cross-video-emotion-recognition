@@ -11,7 +11,7 @@ import time
 from collections import Counter
 
 import config
-from dataloader.leave_one_video_out_loader_deap import LeaveOneVideoOutLoader
+from dataloader.leave_one_video_out_loader import LeaveOneVideoOutLoader
 from models.cnn_2d_model import CnnTwoDimensionModel
 from trainers.cnn_2d_trainer import CnnTwoDimensionTrainer
 from utils import set_global_random_seed
