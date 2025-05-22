@@ -85,6 +85,9 @@ class BaseDataLoader:
         y_v_ = np.concatenate(all_data['y_v_'])
         x_ = np.concatenate(all_data['x_'])
 
+        nan_count = np.isnan(x_).sum()
+        print(f"NaN count in x_: {nan_count}")
+
         return y_a_, y_v_, x_
     
 if __name__ == '__main__':
