@@ -5,7 +5,7 @@ from collections import defaultdict
 dreamer_dataset = sio.loadmat('dataset/Dreamer/DREAMER.mat')    
 
 dreamer_struct = dreamer_dataset['DREAMER']
-dreamer_data = dreamer_struct[0, 0]['Data']
+dreamer_data = dreamer_struct[0, 0]['Data'] 
 
 # 获取受试者数量和视频数量
 n_subjects = dreamer_data.shape[1]
