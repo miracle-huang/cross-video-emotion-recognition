@@ -1,6 +1,8 @@
 random_seed = 42 # 随机种子
 
 window_size = 64 # 窗口大小为0.5秒
+window_size_10 = 1280 # 窗口大小为10秒
+window_size_20 = 2560 # 窗口大小为20秒
 overlap = 0
 DREAMER_channels = ['AF3', 'F7', 'F3', 'FC5', 'T7', 'P7', 'O1', 'O2', 'P8', 'T8', 'FC6', 'F4', 'F8', 'AF4']
 
@@ -8,6 +10,7 @@ DREAMER_video_valence_ratings = [3.17, 3.04, 4.57, 2.04, 3.22, 2.70, 4.52, 1.35,
 DREAMER_video_arousal_ratings = [2.26, 3.00, 3.83, 4.26, 3.70, 3.83, 3.17, 3.96, 3.00, 3.30, 1.96, 2.61, 3.70, 2.22, 3.09, 3.35, 3.00, 3.91]
 DREAMER_video_valence_labels = [1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 0, 1, 0, 0]
 DREAMER_video_arousal_labels = [0, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1]
+DREAMER_all_videos_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
 
 AMIGO_video_valence_ratings = [6.99, 7.58, 3.74, 7.14, 3.88, 3.56, 3.46, 3.55, 3.3, 2.91, 3.15, 5.81, 6.75, 6.93, 7.64, 6.34]
 AMIGO_video_arousal_ratings = [4.08, 4.23, 4.12, 3.84, 4.42, 5.15, 5.01, 6.79, 6.0, 5.59, 6.52, 5.64, 6.05, 4.38, 5.5, 5.53]
@@ -29,11 +32,13 @@ DEAP_half_arousal_high = [11, 8, 31, 6, 39, 10, 19, 1, 7, 37, 35, 9, 38, 34, 36,
 
 # dataset path
 DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
-AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data"
+AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data/"
+DREAMER_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DREAMER/processed_data/"
+AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
 
 # model parameters
-epoch = 100
-batch_size = 256
+epoch = 1
+batch_size = 64
 filters = [64, 128, 256]
 kernel_size_list = [3, 3, 3, 1]
 dropout_rate = 0.2
