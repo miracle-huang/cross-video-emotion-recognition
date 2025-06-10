@@ -57,6 +57,13 @@ class CNNTransformerDataLoader:
         y_v_ = y_v_[random_index]
         y_a_ = y_a_[random_index]
 
+        unique_v, counts_v = np.unique(y_v_, return_counts=True)
+        count_dict = dict(zip(unique_v, counts_v))
+        print('y_v_当中0和1的个数', count_dict)  # 输出：{0: count0, 1: count1}
+        unique_a, counts_a = np.unique(y_a_, return_counts=True)
+        count_dict = dict(zip(unique_a, counts_a))
+        print('y_a_当中0和1的个数', count_dict)  # 输出：{0: count0, 1: count1}
+
         # Divide training set and verification set in 8:2
         all_data_size = len(x_)
         train_size = int(0.8 * all_data_size)
@@ -73,6 +80,13 @@ class CNNTransformerDataLoader:
         test_data['x_test'] = x_test
         test_data['y_a_test'] = y_a_test
         test_data['y_v_test'] = y_v_test
+
+        unique_v_train, counts_v_train = np.unique(train_data['y_v_train'], return_counts=True)
+        count_dict = dict(zip(unique_v_train, counts_v_train))
+        print('y_v_train当中0和1的个数', count_dict)  # 输出：{0: count0, 1: count1}
+        unique_a_train, counts_a_train = np.unique(train_data['y_a_train'], return_counts=True)
+        count_dict = dict(zip(unique_a_train, counts_a_train))
+        print('y_a_train当中0和1的个数', count_dict)  # 输出：{0: count0, 1: count1}
 
         return train_data, val_data, test_data
 

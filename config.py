@@ -34,7 +34,7 @@ DEAP_half_arousal_high = [11, 8, 31, 6, 39, 10, 19, 1, 7, 37, 35, 9, 38, 34, 36,
 DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
 AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data/"
 DREAMER_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DREAMER/processed_data/"
-AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
+# AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
 AMIGO_cnn_transformer_dataset_path = "dataset/amigo/cnn_transformer/window_10s"
 
 # model parameters
