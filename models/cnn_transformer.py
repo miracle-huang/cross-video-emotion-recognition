@@ -8,48 +8,28 @@ from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, l):
+    def __init__(self, d_model: int, max_len: int = 200):
         super(PositionalEncoding, self).__init__()
-        self.d_model = d_model
-
-        # Create a tensor of zeros with shape (sequence_len, d_model)
-        pe = torch.zeros(l, d_model)
-
-        # Determine the device (GPU or CPU)
-        device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-        
-        # Move the positional encoding tensor to the determined device
-        pe = pe.to(device)
-
-        # Calculate the positional encodings
-        for pos in range(l):
-            for i in range(0, d_model, 2):
-                pe[pos, i] = np.sin(pos / (10000 ** ((2 * i) / d_model)))
-                pe[pos, i + 1] = np.cos(pos / 10000 ** ((2 * (i + 1) / d_model)))
-        
-        # Add a batch dimension and set requires_grad to False
-        self.pe = pe.unsqueeze(0)
-        self.pe.requires_grad = False
+        position = torch.arange(max_len, dtype=torch.float32).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-np.log(10000.0) / d_model))
+        pe = torch.zeros(max_len, d_model)
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0)  # shape: (1, max_len, d_model)
+        self.register_buffer('pe', pe)  # buffer 表示不作为参数更新
 
     def forward(self, x):
-        # Add positional encoding to the input tensor
-        ret = np.sqrt(self.d_model) * x + self.pe
-        return ret
+        # x shape: (batch_size, seq_len, d_model)
+        return x + self.pe[:, :x.size(1), :]
     
     
 class Transformer(nn.Module):
     def __init__(self):
         super(Transformer, self).__init__()
         self.relu = nn.ReLU()
-        self.conv1 = nn.Conv1d(1, 64, 65)
-        self.conv2 = nn.Conv1d(64, 128, 33)
-        self.conv3 = nn.Conv1d(128, 256, 17)
-        #self.conv4 = nn.Conv1d(256, 512, 7)
-
-        torch.nn.init.kaiming_normal_(self.conv1.weight)
-        torch.nn.init.kaiming_normal_(self.conv2.weight)
-        torch.nn.init.kaiming_normal_(self.conv3.weight)
-        #torch.nn.init.kaiming_normal_(self.conv4.weight)
+        self.conv1 = nn.Conv1d(14, 64, 65, stride=2)
+        self.conv2 = nn.Conv1d(64, 128, 33, stride=1)
+        self.conv3 = nn.Conv1d(128, 256, 17, stride=1)
 
         self.dropout1 = nn.Dropout(0.1)
 
@@ -58,34 +38,34 @@ class Transformer(nn.Module):
         self.bn3 = nn.BatchNorm1d(256)
         #self.bn4 = nn.BatchNorm1d(512)
 
-        self.cls = nn.Parameter(torch.zeros(1, 1, 256))
+        self.cls_token = nn.Parameter(torch.zeros(1, 1, 256))
 
-        self.positionembedding = PositionalEncoding(256, 1169) # 如果更换卷积层参数或输入长度，这里需要相应调整
-        #self.positionEmbedding = nn.Parameter(torch.zeros(1, 529, 256))
+        # 最大序列长度设置为200，实际会自动裁剪
+        self.position_encoding = PositionalEncoding(d_model=256, max_len=1600)
 
         encoderLayer = nn.TransformerEncoderLayer(d_model = 256, nhead = 4, dropout = 0.2, batch_first = True)
-        self.encoder = nn.TransformerEncoder(encoderLayer, num_layers = 4)
+        self.encoder = nn.TransformerEncoder(encoderLayer, num_layers = 2)
 
         self.linear = nn.Linear(256, 2)
 
     def forward(self, x):
-        x = self.conv1(x)
-        x = self.relu(x)
-        x = self.bn1(x)
-        x = self.conv2(x)
-        x = self.relu(x)
-        x = self.bn2(x)
-        x = self.conv3(x)
-        #x = self.dropout1(x)
-        x = self.relu(x)
-        x = self.bn3(x)
-        #x = self.conv4(x)
-        #x = self.relu(x)
-        #x = self.bn4(x)
-        x = torch.transpose(x, 2, 1)
-        clsToken = self.cls.repeat_interleave(x.shape[0], dim = 0)
-        x = torch.cat((clsToken, x), dim = 1)
-        x = self.positionembedding(x)
-        x = self.encoder(x)
-        x = self.linear(x[:, 0, :])
-        return x
+        # x: (batch_size, 1, seq_len)
+        x = self.relu(self.bn1(self.conv1(x)))  # shape: (B, 64, L1)
+        x = self.relu(self.bn2(self.conv2(x)))  # shape: (B, 128, L2)
+        x = self.relu(self.bn3(self.conv3(x)))  # shape: (B, 256, L3)
+
+        x = x.transpose(1, 2)  # shape: (B, seq_len, d_model=256)
+
+        # 加入 cls_token
+        batch_size = x.size(0)
+        cls_tokens = self.cls_token.expand(batch_size, -1, -1)  # shape: (B, 1, 256)
+        x = torch.cat((cls_tokens, x), dim=1)  # shape: (B, seq_len+1, 256)
+
+        x = self.position_encoding(x) # 添加位置编码
+
+        # Transformer 编码
+        x = self.encoder(x) # shape: (B, seq_len+1, 256)
+
+        # 使用 cls_token 对应输出进行分类
+        out = self.linear(x[:, 0, :])  # shape: (B, 2)
+        return out

@@ -35,11 +35,30 @@ DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video
 AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data/"
 DREAMER_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DREAMER/processed_data/"
 AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
+AMIGO_cnn_transformer_dataset_path = "dataset/amigo/cnn_transformer/window_10s"
 
 # model parameters
-epoch = 1
+epoch = 100
 batch_size = 64
 filters = [64, 128, 256]
 kernel_size_list = [3, 3, 3, 1]
 dropout_rate = 0.2
 learning_rate = 0.001
+
+# channel names mapping
+amigo_channel_mapping = {
+    0: 'AF3',
+    1: 'F7',
+    2: 'F3',
+    3: 'FC5',
+    4: 'T7',
+    5: 'P7',
+    6: 'O1',
+    7: 'O2',
+    8: 'P8',
+    9: 'T8',
+    10: 'FC6',
+    11: 'F4',
+    12: 'F8',
+    13: 'AF4'
+}
