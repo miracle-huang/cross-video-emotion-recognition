@@ -39,9 +39,11 @@ def save_result_to_xlsx(random_seed, train_video_list, test_video_list, dataset_
         x_test, y_a_test, y_v_test = test_data['x_test'], test_data['y_a_test'], test_data['y_v_test']
 
         print("Arousal")
-        acc_a, f1_a, cm_a = train_cnn_transformer(x_train, y_a_train, x_val, y_a_val, x_test, y_a_test)
+        acc_a, f1_a, cm_a = train_cnn_transformer(x_train, y_a_train, x_val, y_a_val, x_test, y_a_test, 
+                                                  test_video_name=f'{test_video}_arousal')
         print("Valence")
-        acc_v, f1_v, cm_v = train_cnn_transformer(x_train, y_v_train, x_val, y_v_val, x_test, y_v_test)
+        acc_v, f1_v, cm_v = train_cnn_transformer(x_train, y_v_train, x_val, y_v_val, x_test, y_v_test, 
+                                                  test_video_name=f'{test_video}_valence')
 
         ws.append([
             f"{test_video}",

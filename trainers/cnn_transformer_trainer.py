@@ -61,7 +61,7 @@ class EarlyStopping:
             if self.counter >= self.patience:
                 self.early_stop = True
 
-def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test):
+def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_video_name):
     train_dataset = EEGDataset(x_train, y_train)
     val_dataset = EEGDataset(x_val, y_val)
     test_dataset = EEGDataset(x_test, y_test)
@@ -80,15 +80,24 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test):
 
     # 创建 tensorboard writer
     result_dir = getattr(config, "result_dir", "./results")
-    log_dir = os.path.join(result_dir, "tensorboard_logs")
+    os.makedirs(result_dir, exist_ok=True)
+    log_dir = os.path.join(result_dir, f"tensorboard_logs/video_{test_video_name}")
     os.makedirs(log_dir, exist_ok=True)
     writer = SummaryWriter(log_dir=log_dir)
+
+    # 用于保存训练曲线数据
+    train_losses = []
+    val_losses = []
+    train_accuracies = []
+    val_accuracies = []
+    val_f1s = []
 
     for epoch in range(config.epoch):
         print(f"Start Epoch {epoch+1}/{config.epoch}")
         # --- Training ---
         model.train()
         total_train_loss = 0
+        train_preds, train_targets = [], []
          # 用tqdm包装train_loader显示进度条
         with tqdm(train_loader, desc=f"Epoch {epoch+1}/{config.epoch}", unit="batch") as t_bar:
             for X_batch, y_batch in t_bar:
@@ -100,7 +109,14 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test):
                 loss.backward()
                 optimizer.step()
                 total_train_loss += loss.item() * X_batch.size(0)
+
+                preds = torch.argmax(output, 1).cpu().numpy()
+                targets = y_batch.cpu().numpy()
+                train_preds.extend(preds)
+                train_targets.extend(targets)
+
         avg_train_loss = total_train_loss / len(train_dataset)
+        train_acc = accuracy_score(train_targets, train_preds)
 
         # --- Validation ---
         model.eval()
@@ -122,8 +138,23 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test):
         val_acc = accuracy_score(val_targets, val_preds)
         val_f1 = f1_score(val_targets, val_preds, average='macro')
 
-        print(f"Epoch {epoch+1}, Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}, Val Acc: {val_acc:.4f}, Val F1: {val_f1:.4f}")
+        # 记录每轮指标
+        train_losses.append(avg_train_loss)
+        val_losses.append(avg_val_loss)
+        train_accuracies.append(train_acc)
+        val_accuracies.append(val_acc)
+        val_f1s.append(val_f1)
 
+        # 写入 TensorBoard
+        writer.add_scalar("Loss/Train", avg_train_loss, epoch+1)
+        writer.add_scalar("Loss/Val", avg_val_loss, epoch+1)
+        writer.add_scalar("Accuracy/Train", train_acc, epoch+1)
+        writer.add_scalar("Accuracy/Val", val_acc, epoch+1)
+        writer.add_scalar("F1/Val", val_f1, epoch+1)
+
+        print(f"Epoch {epoch+1}, Train Loss: {avg_train_loss:.4f}, Val Loss: {avg_val_loss:.4f}, "
+              f"Train Acc: {train_acc:.4f}, Val Acc: {val_acc:.4f}, Val F1: {val_f1:.4f}")
+        
         # --- Early Stopping Check ---
         early_stopping(avg_val_loss)
         if avg_val_loss < best_val_loss:
@@ -157,5 +188,22 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test):
     print(f"Test Accuracy: {test_acc:.4f}")
     print(f"Test F1 Score: {test_f1:.4f}")
     print("Confusion Matrix:\n", test_cm)
+
+    # 保存训练过程为 CSV
+    metrics_df = pd.DataFrame({
+        'Epoch': list(range(1, len(train_losses)+1)),
+        'Train_Loss': train_losses,
+        'Train_Accuracy': train_accuracies,
+        'Val_Loss': val_losses,
+        'Val_Accuracy': val_accuracies,
+        'Val_F1': val_f1s
+    })
+    os.makedirs(result_dir, exist_ok=True)
+    csv_path = os.path.join(result_dir, f"training_curve_video_{test_video_name}.csv")
+    metrics_df.to_csv(csv_path, index=False)
+    print(f"Training curve saved to {csv_path}")
+
+    # 关闭 TensorBoard writer
+    writer.close()
 
     return test_acc, test_f1, test_cm
