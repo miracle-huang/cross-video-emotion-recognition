@@ -27,7 +27,7 @@ class Transformer(nn.Module):
     def __init__(self):
         super(Transformer, self).__init__()
         self.relu = nn.ReLU()
-        self.conv1 = nn.Conv1d(14, 64, 65, stride=1)
+        self.conv1 = nn.Conv1d(2, 64, 65, stride=1)
         self.conv2 = nn.Conv1d(64, 128, 33, stride=1)
         self.conv3 = nn.Conv1d(128, 256, 17, stride=1)
 
