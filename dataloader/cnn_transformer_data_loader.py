@@ -69,8 +69,8 @@ class CNNTransformerDataLoader:
         train_size = int(0.8 * all_data_size)
         val_size = int(0.2 * all_data_size)
 
-        # 选择用哪些channel进行实验，valence是FC6，F4；arousal是P8，AF4
-        select_channels = [8, 13]  # FC6, F4 [10, 11]; P8, AF4 [8, 13]
+        # 选择用哪些channel进行实验
+        select_channels = [2, 11]  # FC6, F4 [10, 11]; P8, AF4 [8, 13]; F3, F4 [2, 11]
 
         train_data['x_train'] = x_[:train_size][:, select_channels, :]
         train_data['y_a_train'] = y_a_[:train_size]
