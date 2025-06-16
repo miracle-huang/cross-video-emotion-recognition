@@ -94,11 +94,11 @@ class LeaveOneVideoOutLoader(BaseDataLoader):
         test_data['y_v_test'] = y_v_test
 
         # 对训练数据进行非零值归一化，并获取归一化参数
-        train_data['x_train'], min_val, max_val = self.normalize_non_zero_values_with_stats(train_data['x_train'])
+        # train_data['x_train'], min_val, max_val = self.normalize_non_zero_values_with_stats(train_data['x_train'])
 
         # 使用训练集的min_val和max_val对验证集和测试集进行归一化
-        val_data['x_val'], _, _ = self.normalize_non_zero_values_with_stats(val_data['x_val'], min_val, max_val)
-        test_data['x_test'], _, _ = self.normalize_non_zero_values_with_stats(test_data['x_test'], min_val, max_val)
+        # val_data['x_val'], _, _ = self.normalize_non_zero_values_with_stats(val_data['x_val'], min_val, max_val)
+        # test_data['x_test'], _, _ = self.normalize_non_zero_values_with_stats(test_data['x_test'], min_val, max_val)
 
         return train_data, val_data, test_data
     

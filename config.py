@@ -30,6 +30,12 @@ DEAP_half_valence_high = [16, 27, 17, 7, 15, 5, 12, 2, 20, 6, 13, 1, 4, 8, 19, 9
 DEAP_half_arousal_low = [26, 22, 28, 16, 15, 12, 17, 23, 29, 21, 27, 13, 25, 18, 24, 40, 33, 20, 14, 30]
 DEAP_half_arousal_high = [11, 8, 31, 6, 39, 10, 19, 1, 7, 37, 35, 9, 38, 34, 36, 4, 3, 5, 2, 32]
 
+# high 10 and low 10
+DEAP_ten_valence_low = [38, 37, 35, 23, 30, 39, 29, 21, 31, 32]
+DEAP_ten_valence_high = [13, 1, 4, 8, 19, 9, 18, 14, 11, 3]
+DEAP_ten_arousal_low = [26, 22, 28, 16, 15, 12, 17, 23, 29, 21]
+DEAP_ten_arousal_high = [35, 9, 38, 34, 36, 4, 3, 5, 2, 32]
+
 # dataset path
 DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
 AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data/"

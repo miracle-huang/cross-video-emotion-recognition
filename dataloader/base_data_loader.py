@@ -55,7 +55,7 @@ class BaseDataLoader:
             # Combine the DE data and PSD data
             psd_file_path = os.path.join(self.dataset_dir, 'PSD_video' + short_name)
             psd_file = sio.loadmat(psd_file_path)
-            data = np.concatenate([data, psd_file['data']], axis=-1)
+            data = np.concatenate([data, psd_file['data']], axis=1)
 
             # Sort the loaded data into a form suitable for neural network training
             if dataset_name == 'DEAP':

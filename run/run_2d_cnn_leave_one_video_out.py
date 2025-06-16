@@ -11,7 +11,7 @@ import time
 from collections import Counter
 
 import config
-from dataloader.leave_one_video_out_loader import LeaveOneVideoOutLoader
+from dataloader.leave_one_video_out_2d_cnn_loader import LeaveOneVideoOutLoader
 from models.cnn_2d_model import CnnTwoDimensionModel
 from trainers.cnn_2d_trainer import CnnTwoDimensionTrainer
 from utils import set_global_random_seed
@@ -38,7 +38,7 @@ def leave_one_content_out(dataloader):
     train_content_loader - The class used to load training data
     test_content_loader - The class used to load testing data
     '''
-    train_data, val_data, test_data = dataloader.load_data(dataset_name='DREAMER')
+    train_data, val_data, test_data = dataloader.load_data(dataset_name='DEAP')
     input_shape = train_data['x_train'].shape[-3:]
 
     cnn_model_creater = CnnTwoDimensionModel(
@@ -66,7 +66,7 @@ def save_result_to_xlsx(
     for test_video in test_video_list:
         train_content_list_leave = [x for x in train_video_list if x != test_video]
         print(f"Leave one video out: {test_video}, train content list: {train_content_list_leave}")
-        dataloader = LeaveOneVideoOutLoader(config.DREAMER_dataset_path, random_seed, train_content_list_leave, [test_video])
+        dataloader = LeaveOneVideoOutLoader(config.DEAP_dataset_path, random_seed, train_content_list_leave, [test_video])
         acc_output_a, acc_output_v, f1_a, f1_v, conf_matrix_a, conf_matrix_v = leave_one_content_out(dataloader)
         ws.append([
             f"{test_video}",
@@ -81,8 +81,9 @@ def save_result_to_xlsx(
 
 if __name__ == '__main__':
     start_time = time.time()
+    train_video_list = config.DEAP_ten_valence_high + config.DEAP_ten_valence_low
     save_result_to_xlsx(
-        config.random_seed, config.DREAMER_all_videos_list, config.DREAMER_all_videos_list)
+        config.random_seed, train_video_list, config.DEAP_all_videos_list)
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")
