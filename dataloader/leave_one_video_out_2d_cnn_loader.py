@@ -103,5 +103,5 @@ class LeaveOneVideoOutLoader(BaseDataLoader):
         return train_data, val_data, test_data
     
 if __name__ == '__main__':
-    leave_one_video_out_loader = LeaveOneVideoOutLoader(config.DREAMER_dataset_path, 42, config.DREAMER_all_videos_list, [1])
+    leave_one_video_out_loader = LeaveOneVideoOutLoader(config.AMIGO_all_videos_list, 42, config.AMIGO_all_videos_list, [1])
     train_data, val_data, test_data = leave_one_video_out_loader.load_data(dataset_name='DREAMER')

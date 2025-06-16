@@ -91,5 +91,5 @@ class BaseDataLoader:
         return y_a_, y_v_, x_
     
 if __name__ == '__main__':
-    base_data_loader = BaseDataLoader(config.DREAMER_dataset_path, 42)
-    base_data_loader.processing_data_in_content_list(config.DREAMER_all_videos_list, dataset_name='DREAMER')
+    base_data_loader = BaseDataLoader(config.AMIGO_dataset_path, 42)
+    base_data_loader.processing_data_in_content_list(config.AMIGO_all_videos_list, dataset_name='AMIGO')

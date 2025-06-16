@@ -17,6 +17,10 @@ AMIGO_video_arousal_ratings = [4.08, 4.23, 4.12, 3.84, 4.42, 5.15, 5.01, 6.79, 6
 AMIGO_video_valence_labels = [1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]
 AMIGO_video_arousal_labels = [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 1, 1]
 AMIGO_all_videos_list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
+AMIGO_half_valence_low = [7, 9, 10, 11]
+AMIGO_half_valence_high = [1, 2, 4, 15]
+AMIGO_half_arousal_low = [1, 2, 3, 4]
+AMIGO_half_arousal_high = [8, 9, 11, 13]
 
 # valence and arousal content lists in DEAP dataset
 # A complete list of valence and arousal order, from low to high
