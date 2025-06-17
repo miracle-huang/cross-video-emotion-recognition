@@ -61,7 +61,8 @@ class EarlyStopping:
             if self.counter >= self.patience:
                 self.early_stop = True
 
-def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_video_name):
+def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_video_name, experiment_name="all_videos"):
+    in_channels = x_train.shape[1]  # 通道数
     train_dataset = EEGDataset(x_train, y_train)
     val_dataset = EEGDataset(x_val, y_val)
     test_dataset = EEGDataset(x_test, y_test)
@@ -70,7 +71,7 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_v
     val_loader = DataLoader(val_dataset, batch_size=config.batch_size, shuffle=False, num_workers=0)
     test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False, num_workers=0)
 
-    model = Transformer().to(device)
+    model = Transformer(in_channels=in_channels).to(device)
     criterion = torch.nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
     early_stopping = EarlyStopping(patience=7, min_delta=1e-4)
@@ -81,7 +82,7 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_v
     # 创建 tensorboard writer
     result_dir = getattr(config, "result_dir", "./results")
     os.makedirs(result_dir, exist_ok=True)
-    log_dir = os.path.join(result_dir, f"tensorboard_logs/video_{test_video_name}")
+    log_dir = os.path.join(result_dir, f"tensorboard_logs/{experiment_name}/video_{test_video_name}/")
     os.makedirs(log_dir, exist_ok=True)
     writer = SummaryWriter(log_dir=log_dir)
 
@@ -198,8 +199,9 @@ def train_cnn_transformer(x_train, y_train, x_val, y_val, x_test, y_test, test_v
         'Val_Accuracy': val_accuracies,
         'Val_F1': val_f1s
     })
-    os.makedirs(result_dir, exist_ok=True)
-    csv_path = os.path.join(result_dir, f"training_curve_video_{test_video_name}.csv")
+    csv_log_path = os.path.join(result_dir, f"log/{experiment_name}/")
+    os.makedirs(csv_log_path, exist_ok=True)
+    csv_path = os.path.join(csv_log_path, f"training_curve_video_{test_video_name}.csv")
     metrics_df.to_csv(csv_path, index=False)
     print(f"Training curve saved to {csv_path}")
 

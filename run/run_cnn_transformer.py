@@ -17,12 +17,12 @@ from trainers.cnn_transformer_trainer import train_cnn_transformer
 from dataloader.cnn_transformer_data_loader import CNNTransformerDataLoader
 import config
 
-def save_result_to_xlsx(random_seed, train_video_list, test_video_list, dataset_dir):
+def save_result_to_xlsx(random_seed, train_video_list, test_video_list, dataset_dir, experiment_name="all_videos"):
     set_global_random_seed(random_seed)
     save_folder = f"result_folder/"
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
-    xlsx_name = os.path.join(save_folder, f"cnn_transformer_random_seed{random_seed}_batchsize{config.batch_size}.xlsx")
+    xlsx_name = os.path.join(save_folder, f"{experiment_name}_cnn_transformer_random_seed{random_seed}_batchsize{config.batch_size}.xlsx")
     wb = Workbook()
     ws = wb.active
     ws.append(["Content", "Arousal", "Valence", "f1_a", "f1_v", "conf_matrix_a", "conf_matrix_v"])
@@ -40,10 +40,10 @@ def save_result_to_xlsx(random_seed, train_video_list, test_video_list, dataset_
 
         print("Arousal")
         acc_a, f1_a, cm_a = train_cnn_transformer(x_train, y_a_train, x_val, y_a_val, x_test, y_a_test, 
-                                                  test_video_name=f'{test_video}_arousal')
+                                                  test_video_name=f'{test_video}_arousal', experiment_name=experiment_name)
         print("Valence")
         acc_v, f1_v, cm_v = train_cnn_transformer(x_train, y_v_train, x_val, y_v_val, x_test, y_v_test, 
-                                                  test_video_name=f'{test_video}_valence')
+                                                  test_video_name=f'{test_video}_valence', experiment_name=experiment_name)
 
         ws.append([
             f"{test_video}",
@@ -58,7 +58,15 @@ def save_result_to_xlsx(random_seed, train_video_list, test_video_list, dataset_
 
 if __name__ == "__main__":
     start_time = time.time()
-    save_result_to_xlsx(config.random_seed, config.AMIGO_all_videos_list, config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path)
+    DEAP_top_bottom_train_arousal_list = config.DEAP_ten_arousal_high + config.DEAP_ten_arousal_low
+    DEAP_top_bottom_train_valence_list = config.DEAP_ten_valence_high + config.DEAP_ten_valence_low
+
+    save_result_to_xlsx(config.random_seed, config.DEAP_all_videos_list,
+                        config.DEAP_all_videos_list, config.DEAP_cnn_transformer_dataset_path, experiment_name="DEAP_all_videos")
+    save_result_to_xlsx(config.random_seed, DEAP_top_bottom_train_arousal_list,
+                        config.DEAP_all_videos_list, config.DEAP_cnn_transformer_dataset_path, experiment_name="DEAP_top_bottom_arousal")
+    save_result_to_xlsx(config.random_seed, DEAP_top_bottom_train_valence_list,
+                        config.DEAP_all_videos_list, config.DEAP_cnn_transformer_dataset_path, experiment_name="DEAP_top_bottom_valence")
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")

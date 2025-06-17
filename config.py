@@ -50,6 +50,7 @@ AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-vide
 DREAMER_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DREAMER/processed_data/"
 # AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
 AMIGO_cnn_transformer_dataset_path = "dataset/amigo/cnn_transformer/window_10s"
+DEAP_cnn_transformer_dataset_path = "dataset/DEAP/cnn_transformer/window_10s/"
 
 # model parameters
 epoch = 100
