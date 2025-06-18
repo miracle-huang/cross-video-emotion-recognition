@@ -18,7 +18,6 @@ channel_count = 32  # 通道数量
 def read_file(file):
     data = sio.loadmat(file)
     data = data['data']
-    data_1st = loadmat(file)['data'][0]
     return data
 
 def data_processing_deap():
@@ -33,14 +32,15 @@ def data_processing_deap():
         for video_index in range(video_count):
             for channel_index in range(channel_count):
                 channel_data = data[video_index][channel_index]
+                channel_data = channel_data[384:]
                 nan_count, zero_count = calculate_0_and_nan(channel_data)
 
                 if nan_count > 0 or zero_count > 0:
-                    print(f"视频 {video_index + 1} 通道 {config.amigo_channel_mapping[channel_index]} 存在 {nan_count} 个 NaN 和 {zero_count} 个零值")
+                    print(f"视频 {video_index + 1} 通道 {channel_index + 1} 存在 {nan_count} 个 NaN 和 {zero_count} 个零值")
                     all_video_list_eeg[video_index][channel_index].extend([])
                 else:
                     channel_windows = segment_signal(channel_data, config.window_size_10, config.overlap)
-                    # print(f"视频 {video_index + 1} 通道 {config.amigo_channel_mapping[channel_index]} 窗口数量: {len(channel_windows)}")
+                    # print(f"视频 {video_index + 1} 通道 {channel_index + 1} 窗口数量: {len(channel_windows)}")
                     all_video_list_eeg[video_index][channel_index].extend(channel_windows)
 
     print("所有视频处理完成，开始保存数据...")
