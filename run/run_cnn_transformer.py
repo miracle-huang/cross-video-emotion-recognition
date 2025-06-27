@@ -64,6 +64,9 @@ if __name__ == "__main__":
     DREAMER_top_bottom_train_arousal_list = config.DREAMER_half_arousal_high + config.DREAMER_half_arousal_low
     DREAMER_top_bottom_train_valence_list = config.DREAMER_half_valence_high + config.DREAMER_half_valence_low
 
+    AMIGOS_top_bottom_train_arousal_list = config.AMIGO_half_arousal_high + config.AMIGO_half_arousal_low
+    AMIGOS_top_bottom_train_valence_list = config.AMIGO_half_valence_high + config.AMIGO_half_valence_low
+
     # save_result_to_xlsx(config.random_seed, config.DEAP_all_videos_list,
     #                     config.DEAP_all_videos_list, config.DEAP_cnn_transformer_dataset_path, experiment_name="DEAP_all_videos")
     # save_result_to_xlsx(config.random_seed, DEAP_top_bottom_train_arousal_list,
@@ -71,12 +74,17 @@ if __name__ == "__main__":
     # save_result_to_xlsx(config.random_seed, DEAP_top_bottom_train_valence_list,
     #                     config.DEAP_all_videos_list, config.DEAP_cnn_transformer_dataset_path, experiment_name="DEAP_top_bottom_valence")
 
-    save_result_to_xlsx(config.random_seed, config.DREAMER_all_videos_list,
-                        config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_all_videos")
-    save_result_to_xlsx(config.random_seed, DREAMER_top_bottom_train_arousal_list,
-                        config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_top_bottom_arousal")
-    save_result_to_xlsx(config.random_seed, DREAMER_top_bottom_train_valence_list,
-                        config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_top_bottom_valence")
+    # save_result_to_xlsx(config.random_seed, config.DREAMER_all_videos_list,
+    #                     config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_all_videos")
+    # save_result_to_xlsx(config.random_seed, DREAMER_top_bottom_train_arousal_list,
+    #                     config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_top_bottom_arousal")
+    # save_result_to_xlsx(config.random_seed, DREAMER_top_bottom_train_valence_list,
+    #                     config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_top_bottom_valence")
+    
+    # save_result_to_xlsx(config.random_seed, AMIGOS_top_bottom_train_arousal_list,
+    #                     config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path, experiment_name="AMIGOS_top_bottom_arousal")
+    # save_result_to_xlsx(config.random_seed, AMIGOS_top_bottom_train_valence_list,
+    #                     config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path, experiment_name="AMIGOS_top_bottom_valence")
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")

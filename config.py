@@ -53,8 +53,14 @@ AMIGO_cnn_transformer_dataset_path = "dataset/amigo/cnn_transformer/window_10s"
 DEAP_cnn_transformer_dataset_path = "dataset/DEAP/cnn_transformer/window_10s/"
 DREAMER_cnn_transformer_dataset_path = "dataset/dreamer/cnn_transformer/window_10s/"
 
+# brain waves dataset path
+DEAP_alpha_path = "dataset/DEAP/processed_data_alpha/"
+DEAP_beta_path = "dataset/DEAP/processed_data_beta/"
+DEAP_gamma_path = "dataset/DEAP/processed_data_gamma/"
+DEAP_theta_path = "dataset/DEAP/processed_data_theta/"
+
 # model parameters
-epoch = 100
+epoch = 1
 batch_size = 64
 filters = [64, 128, 256]
 kernel_size_list = [3, 3, 3, 1]

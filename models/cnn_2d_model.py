@@ -64,6 +64,7 @@ class CnnTwoDimensionModel:
         model.compile(optimizer=tf.keras.optimizers.Adam(self.learning_rate),
             loss='categorical_crossentropy',
             metrics=['accuracy'],
-            loss_weights=[1,1])
+            # loss_weights=[1,1] # 只有一个输出时不用设置多个损失函数权重，否则不匹配则会报错
+            )
 
         return model

@@ -2,9 +2,11 @@ import sys
 from os import path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
+import tensorflow as tf
+print("Num GPUs Available:", len(tf.config.list_physical_devices('GPU')))
+
 import os
 import numpy as np
-import tensorflow as tf
 from openpyxl import Workbook
 import random
 import time
@@ -32,13 +34,13 @@ intra_op_threads = tf.config.threading.get_intra_op_parallelism_threads()
 print("Inter-op threads:", inter_op_threads)
 print("Intra-op threads:", intra_op_threads)
 
-def leave_one_content_out(dataloader):
+def leave_one_video_out(dataloader, dataset_name):
     '''
     random_seed - Random seed
     train_content_loader - The class used to load training data
     test_content_loader - The class used to load testing data
     '''
-    train_data, val_data, test_data = dataloader.load_data(dataset_name='DREAMER')
+    train_data, val_data, test_data = dataloader.load_data(dataset_name)
     input_shape = train_data['x_train'].shape[-3:]
 
     cnn_model_creater = CnnTwoDimensionModel(
@@ -54,20 +56,20 @@ def leave_one_content_out(dataloader):
     return acc_output_a, acc_output_v, f1_a, f1_v, conf_matrix_a, conf_matrix_v
 
 def save_result_to_xlsx(
-        random_seed, train_video_list, test_video_list):
+        random_seed, train_video_list, test_video_list, data_path, dataset_name, experiment_name):
     set_global_random_seed(random_seed)
     save_folder = f"result_folder/"
     if not os.path.exists(save_folder):
         os.makedirs(save_folder)
-    xlsx_name = os.path.join(save_folder, f"random_seed{random_seed}_batchsize{config.batch_size}.xlsx")
+    xlsx_name = os.path.join(save_folder, f"{dataset_name}_{experiment_name}_random_seed{random_seed}_batchsize{config.batch_size}.xlsx")
     wb = Workbook()
     ws = wb.active
     ws.append(["Content", "Arousal", "Valence", "f1_a", "f1_v", "conf_matrix_a", "conf_matrix_v"])
     for test_video in test_video_list:
-        train_content_list_leave = [x for x in train_video_list if x != test_video]
-        print(f"Leave one video out: {test_video}, train content list: {train_content_list_leave}")
-        dataloader = LeaveOneVideoOutLoader(config.DREAMER_dataset_path, random_seed, train_content_list_leave, [test_video])
-        acc_output_a, acc_output_v, f1_a, f1_v, conf_matrix_a, conf_matrix_v = leave_one_content_out(dataloader)
+        train_video_list_leave = [x for x in train_video_list if x != test_video]
+        print(f"Leave one video out: {test_video}, train video list: {train_video_list_leave}")
+        dataloader = LeaveOneVideoOutLoader(data_path, random_seed, train_video_list_leave, [test_video])
+        acc_output_a, acc_output_v, f1_a, f1_v, conf_matrix_a, conf_matrix_v = leave_one_video_out(dataloader, dataset_name)
         ws.append([
             f"{test_video}",
             f"{acc_output_a}",
@@ -81,9 +83,14 @@ def save_result_to_xlsx(
 
 if __name__ == '__main__':
     start_time = time.time()
-    train_video_list = config.DREAMER_half_valence_high + config.DREAMER_half_valence_low
     save_result_to_xlsx(
-        config.random_seed, train_video_list, config.DREAMER_all_videos_list)
+        random_seed=42,
+        train_video_list=config.DEAP_all_videos_list,
+        test_video_list=config.DEAP_all_videos_list,
+        data_path=config.DEAP_alpha_path,
+        dataset_name='DEAP',
+        experiment_name='alpha'
+    )
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")
