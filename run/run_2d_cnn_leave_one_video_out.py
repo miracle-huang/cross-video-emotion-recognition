@@ -91,6 +91,30 @@ if __name__ == '__main__':
         dataset_name='DEAP',
         experiment_name='alpha'
     )
+    save_result_to_xlsx(
+        random_seed=42,
+        train_video_list=config.DEAP_all_videos_list,
+        test_video_list=config.DEAP_all_videos_list,
+        data_path=config.DEAP_beta_path,
+        dataset_name='DEAP',
+        experiment_name='beta'
+    )
+    save_result_to_xlsx(
+        random_seed=42,
+        train_video_list=config.DEAP_all_videos_list,
+        test_video_list=config.DEAP_all_videos_list,
+        data_path=config.DEAP_gamma_path,
+        dataset_name='DEAP',
+        experiment_name='gamma'
+    )
+    save_result_to_xlsx(
+        random_seed=42,
+        train_video_list=config.DEAP_all_videos_list,
+        test_video_list=config.DEAP_all_videos_list,
+        data_path=config.DEAP_theta_path,
+        dataset_name='DEAP',
+        experiment_name='theta'
+    )
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")

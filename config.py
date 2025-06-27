@@ -59,6 +59,16 @@ DEAP_beta_path = "dataset/DEAP/processed_data_beta/"
 DEAP_gamma_path = "dataset/DEAP/processed_data_gamma/"
 DEAP_theta_path = "dataset/DEAP/processed_data_theta/"
 
+AMIGO_alpha_path = "dataset/amigo/processed_data_alpha/"
+AMIGO_beta_path = "dataset/amigo/processed_data_beta/"
+AMIGO_gamma_path = "dataset/amigo/processed_data_gamma/"
+AMIGO_theta_path = "dataset/amigo/processed_data_theta/"
+
+DREAMER_alpha_path = "dataset/DREAMER/processed_data_alpha/"
+DREAMER_beta_path = "dataset/DREAMER/processed_data_beta/"
+DREAMER_gamma_path = "dataset/DREAMER/processed_data_gamma/"
+DREAMER_theta_path = "dataset/DREAMER/processed_data_theta/"
+
 # model parameters
 epoch = 1
 batch_size = 64
