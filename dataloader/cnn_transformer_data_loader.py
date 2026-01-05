@@ -28,6 +28,10 @@ class CNNTransformerDataLoader:
             y_v = file['valence_labels'].flatten()  # 确保 y_v 是一维数组
             y_a = file['arousal_labels'].flatten()  # 确保 y_a 是一维数组
 
+            # 反转标签，验证准确率极低的原因
+            y_v ^=1
+            y_a ^=1
+
             all_data['y_a_'].append(y_a)
             all_data['y_v_'].append(y_v)
             all_data['x_'].append(eeg_data)

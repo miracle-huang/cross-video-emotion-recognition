@@ -63,14 +63,18 @@ def data_processing_dreamer():
         arousal_labels_eeg = np.repeat(config.DREAMER_video_arousal_labels[int(video_index)], video_eeg_array.shape[1])
         valence_labels_eeg = np.repeat(config.DREAMER_video_valence_labels[int(video_index)], video_eeg_array.shape[1])
 
-        processed_data_eeg = {
-            'eeg_data': video_eeg_array,
-            'arousal_labels': arousal_labels_eeg,
-            'valence_labels': valence_labels_eeg
-        }
-        result_dir = 'dataset/dreamer/cnn_transformer/window_10s/'
-        sio.savemat(result_dir + "EEG_video" + str(video_index + 1).zfill(2) + ".mat", processed_data_eeg)
-        print("Saved video {} processed video data ".format(video_index + 1))
+        print('video_index:', video_index)
+        print('arousal label:', config.DREAMER_video_arousal_labels[int(video_index)])
+        print('valence label:', config.DREAMER_video_valence_labels[int(video_index)])
+
+        # processed_data_eeg = {
+        #     'eeg_data': video_eeg_array,
+        #     'arousal_labels': arousal_labels_eeg,
+        #     'valence_labels': valence_labels_eeg
+        # }
+        # result_dir = 'dataset/dreamer/cnn_transformer/window_10s/'
+        # sio.savemat(result_dir + "EEG_video" + str(video_index + 1).zfill(2) + ".mat", processed_data_eeg)
+        # print("Saved video {} processed video data ".format(video_index + 1))
 
 if __name__ == "__main__":
     data_processing_dreamer()

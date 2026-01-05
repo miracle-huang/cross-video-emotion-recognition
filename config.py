@@ -1,3 +1,5 @@
+import random
+
 random_seed = 42 # 随机种子
 
 window_size = 64 # 窗口大小为0.5秒
@@ -45,9 +47,9 @@ DEAP_ten_arousal_low = [26, 22, 28, 16, 15, 12, 17, 23, 29, 21]
 DEAP_ten_arousal_high = [35, 9, 38, 34, 36, 4, 3, 5, 2, 32]
 
 # dataset path
-DEAP_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DEAP/data_2d/with_base_0.5/"
-AMIGO_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/amigo/processed_data/"
-DREAMER_dataset_path = "D:/huangzhiying/cross-video-emotion-recognition/cross-video-emotion-recognition/dataset/DREAMER/processed_data/"
+DEAP_dataset_path = "dataset/DEAP/data_2d/with_base_0.5/"
+AMIGO_dataset_path = "dataset/amigo/processed_data/"
+DREAMER_dataset_path = "dataset/Dreamer/processed_data/"
 # AMIGO_raw_window_path = "dataset/amigo/raw_window_data_10s/"
 AMIGO_cnn_transformer_dataset_path = "dataset/amigo/cnn_transformer/window_10s"
 DEAP_cnn_transformer_dataset_path = "dataset/DEAP/cnn_transformer/window_10s/"
@@ -70,7 +72,7 @@ DREAMER_gamma_path = "dataset/DREAMER/processed_data_gamma/"
 DREAMER_theta_path = "dataset/DREAMER/processed_data_theta/"
 
 # model parameters
-epoch = 1
+epoch = 100
 batch_size = 64
 filters = [64, 128, 256]
 kernel_size_list = [3, 3, 3, 1]
@@ -110,3 +112,29 @@ dreamer_channel_mapping = {
     12: 'F8',
     13: 'AF4'
 }
+
+DEAP_valence_high_random = None
+DEAP_valence_low_random = None
+DEAP_arousal_high_random = None
+DEAP_arousal_low_random = None
+
+AMIGO_valence_high_random = None
+AMIGO_valence_low_random = None
+AMIGO_arousal_high_random = None
+AMIGO_arousal_low_random = None
+
+DREAMER_valence_high_random = None
+DREAMER_valence_low_random = None
+DREAMER_arousal_high_random = None
+DREAMER_arousal_low_random = None
+
+def random_video_list(video_list, seed):
+    random.seed(seed)
+    random.shuffle(video_list)
+
+    half_videos = len(video_list) // 2
+
+    first_half = random.sample(video_list, k=half_videos)
+    second_half = [x for x in video_list if x not in first_half]
+
+    return first_half, second_half

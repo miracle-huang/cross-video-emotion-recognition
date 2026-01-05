@@ -85,6 +85,12 @@ if __name__ == "__main__":
     #                     config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path, experiment_name="AMIGOS_top_bottom_arousal")
     # save_result_to_xlsx(config.random_seed, AMIGOS_top_bottom_train_valence_list,
     #                     config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path, experiment_name="AMIGOS_top_bottom_valence")
+    
+    save_result_to_xlsx(config.random_seed, config.AMIGO_all_videos_list,
+                        config.AMIGO_all_videos_list, config.AMIGO_cnn_transformer_dataset_path, experiment_name="AMIGO_all_videos_reverse")
+    # save_result_to_xlsx(config.random_seed, config.DREAMER_all_videos_list,
+    #                     config.DREAMER_all_videos_list, config.DREAMER_cnn_transformer_dataset_path, experiment_name="DREAMER_all_videos_reverse")
+
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")

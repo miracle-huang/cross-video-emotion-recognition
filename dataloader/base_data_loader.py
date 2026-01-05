@@ -38,15 +38,45 @@ class BaseDataLoader:
             y_a = file['arousal_labels']
 
             # Set valance and arousal labels based on participant_ratings (if DEAP dataset)
+            # if dataset_name == 'DEAP':
+            #     if i in config.DEAP_half_valence_low:
+            #         y_v[:] = 0
+            #     else:
+            #         y_v[:] = 1
+            #     if i in config.DEAP_half_arousal_low:
+            #         y_a[:] = 0
+            #     else:
+            #         y_a[:] = 1
+
+            # 跑随机label实验
             if dataset_name == 'DEAP':
-                if i in config.DEAP_half_valence_low:
+                if i in config.DEAP_valence_low_random:
                     y_v[:] = 0
                 else:
                     y_v[:] = 1
-                if i in config.DEAP_half_arousal_low:
+                if i in config.DEAP_arousal_low_random:
                     y_a[:] = 0
                 else:
                     y_a[:] = 1
+            if dataset_name == 'AMIGO':
+                if i in config.AMIGO_valence_low_random:
+                    y_v[:] = 0
+                else:
+                    y_v[:] = 1
+                if i in config.AMIGO_arousal_low_random:
+                    y_a[:] = 0
+                else:
+                    y_a[:] = 1
+            if dataset_name == 'DREAMER':
+                if i in config.DREAMER_valence_low_random:
+                    y_v[:] = 0
+                else:
+                    y_v[:] = 1
+                if i in config.DREAMER_arousal_low_random:
+                    y_a[:] = 0
+                else:
+                    y_a[:] = 1
+
         
             # One-Hot Encoding num_classes=2
             y_v = to_categorical(y_v, 2)

@@ -83,38 +83,75 @@ def save_result_to_xlsx(
 
 if __name__ == '__main__':
     start_time = time.time()
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.AMIGO_all_videos_list,
+    #     test_video_list=config.AMIGO_all_videos_list,
+    #     data_path=config.AMIGO_alpha_path,
+    #     dataset_name='AMIGO',
+    #     experiment_name='alpha'
+    # )
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.AMIGO_all_videos_list,
+    #     test_video_list=config.AMIGO_all_videos_list,
+    #     data_path=config.AMIGO_beta_path,
+    #     dataset_name='AMIGO',
+    #     experiment_name='beta'
+    # )
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.AMIGO_all_videos_list,
+    #     test_video_list=config.AMIGO_all_videos_list,
+    #     data_path=config.AMIGO_gamma_path,
+    #     dataset_name='AMIGO',
+    #     experiment_name='gamma'
+    # )
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.AMIGO_all_videos_list,
+    #     test_video_list=config.AMIGO_all_videos_list,
+    #     data_path=config.AMIGO_theta_path,
+    #     dataset_name='AMIGO',
+    #     experiment_name='theta'
+    # )
+
+    config.DEAP_valence_high_random, config.DEAP_valence_low_random = config.random_video_list(list(range(1, 41)), seed=42)
+    config.DEAP_arousal_high_random, config.DEAP_arousal_low_random = config.random_video_list(list(range(1, 41)), seed=43)
+
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.DEAP_all_videos_list,
+    #     test_video_list=config.DEAP_all_videos_list,
+    #     data_path=config.DEAP_dataset_path,
+    #     dataset_name='DEAP',
+    #     experiment_name='Random'
+    # )
+
+    # config.AMIGO_valence_high_random, config.AMIGO_valence_low_random = config.random_video_list(list(range(1, 17)), seed=12)
+    # config.AMIGO_arousal_high_random, config.AMIGO_arousal_low_random = config.random_video_list(list(range(1, 17)), seed=123)
+
+    # save_result_to_xlsx(
+    #     random_seed=42,
+    #     train_video_list=config.AMIGO_all_videos_list,
+    #     test_video_list=config.AMIGO_all_videos_list,
+    #     data_path=config.AMIGO_dataset_path,
+    #     dataset_name='AMIGO',
+    #     experiment_name='Random'
+    # )
+
+    config.DREAMER_valence_high_random, config.DREAMER_valence_low_random = config.random_video_list(list(range(1, 19)), seed=2024)
+    config.DREAMER_arousal_high_random, config.DREAMER_arousal_low_random = config.random_video_list(list(range(1, 19)), seed=2025)
+
     save_result_to_xlsx(
         random_seed=42,
-        train_video_list=config.DEAP_all_videos_list,
-        test_video_list=config.DEAP_all_videos_list,
-        data_path=config.DEAP_alpha_path,
-        dataset_name='DEAP',
-        experiment_name='alpha'
+        train_video_list=config.DREAMER_all_videos_list,
+        test_video_list=config.DREAMER_all_videos_list,
+        data_path=config.DREAMER_dataset_path,
+        dataset_name='DREAMER',
+        experiment_name='Random'
     )
-    save_result_to_xlsx(
-        random_seed=42,
-        train_video_list=config.DEAP_all_videos_list,
-        test_video_list=config.DEAP_all_videos_list,
-        data_path=config.DEAP_beta_path,
-        dataset_name='DEAP',
-        experiment_name='beta'
-    )
-    save_result_to_xlsx(
-        random_seed=42,
-        train_video_list=config.DEAP_all_videos_list,
-        test_video_list=config.DEAP_all_videos_list,
-        data_path=config.DEAP_gamma_path,
-        dataset_name='DEAP',
-        experiment_name='gamma'
-    )
-    save_result_to_xlsx(
-        random_seed=42,
-        train_video_list=config.DEAP_all_videos_list,
-        test_video_list=config.DEAP_all_videos_list,
-        data_path=config.DEAP_theta_path,
-        dataset_name='DEAP',
-        experiment_name='theta'
-    )
+
     end_time = time.time()
     elapsed_time = end_time - start_time
     print(f"代码运行时间: {elapsed_time} 秒")
