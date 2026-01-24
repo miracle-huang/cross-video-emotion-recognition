@@ -2,7 +2,8 @@
 
 [![JSAI 2024](https://img.shields.io/badge/JSAI-2024-blue)](https://www.ai-gakkai.or.jp/jsai2024/)
 
-[IEEE PICom 2024](https://img.shields.io/badge/IEEE-PICom%202024-00629B)
+[![IEEE PICom 2024](https://img.shields.io/badge/IEEE-PICom%202024-00629B)](https://cyber-science.org/2024/picom/)
+
 
 # 概要
 
