@@ -1,13 +1,9 @@
 # Evaluating Cross-Video Emotion Recognition in EEG with Comparative Study and Factor Exploration
 
 [![JSAI 2024](https://img.shields.io/badge/JSAI-2024-blue)](https://www.ai-gakkai.or.jp/jsai2024/)
-
 [![IEEE PICom 2024](https://img.shields.io/badge/IEEE-PICom%202024-00629B)](https://cyber-science.org/2024/picom/)
 
-
 # 概要
-
----
 
 生理信号（例：EEG）に基づく情動識別研究では、モデルが特定の動画刺激の特徴を「記憶」してしまい、その結果、クロスビデオ汎化（すなわち学習に用いた動画と評価に用いる動画が異なる設定）において性能が著しく低下することが少なくありません。本研究は Cross-Video Emotion Recognition の課題設定に焦点を当て、データ前処理から学習・評価に至るまでの一連の実験パイプラインを体系的に整理し、実験の再現、アブレーション、ならびにモデル拡張を容易にすることを目的としています。
 
@@ -25,25 +21,31 @@
 
 非クロスビデオ（動画内）実験では、DEAPデータセットを用い、2D-CNNをベンチマークとして5分割交差検証を行いました。その結果、覚醒度（Arousal）で**95.92%**、価数（Valence）で**96.24**%という高い平均精度を達成しました。全動画のデータを使用した場合の精度は極めて高い一方、**未知の動画（Unseen videos）**に対する汎化性能の向上が本研究の主要な課題となっています。
 
-![image.png](image\image.png)
+![image.png](image/image.png)
 
 ### クロスビデオ情動識別
 
 クロスビデオ実験では、**動画1件抜き交差検証 (LOVO)** を用いてモデルの汎化性能を評価しました。実験の結果、**特徴量ベースの2D-CNN** が最も高い覚醒度（Arousal）精度を達成し（多くが50%超）、LOVOにおいて最も高いポテンシャルを示しました。一方、エンドツーエンドのCNN-Transformerはアンダーフィッティングに陥り、ファインチューニング手法もデータ削減時には事前学習の優位性が失われることが確認されました。動画内実験での高精度（約96%）と比較して、**未知の動画 (Unseen videos)** に対する認識精度は大幅に低下しており、汎化性能の向上が極めて重要な課題であることが浮き彫りとなりました。
 
-![image.png](image\image1.png)
+![image.png](image/image1.png)
 
 ### 各脳波帯域がクロスビデオ情動識別に及ぼす影響
 
-![image.png](image\image2.png)
+![image.png](image/image2.png)
 
 ### 感情ラベルの正確性がクロスビデオ情動識別に及ぼす影響
 
-![image.png](image\image3.png)
+<p align="center">
+  <img src="image/image3.png" width="50%"/>
+</p>
 
-![image.png](image\image4.png)
+<p align="center">
+  <img src="image/image4.png" width="50%"/>
+</p>
 
-![image.png](image\image5.png)
+<p align="center">
+  <img src="image/image5.png" width="50%"/>
+</p>
 
 # **はじめに**
 
@@ -199,13 +201,13 @@ python run/run_cnn_transformer.py
 
 ## 情動識別：価数 & 覚醒度 (Valence & Arousal)
 
-![image.png](image\image6.png)
+![image.png](image/image6.png)
 
 **情動識別（Emotion Recognition）**とは，映画・音楽・ゲームなどの刺激に対して人が示す生理信号（EEG，ECG，EOG，呼吸，GSR など）を解析し，深層学習モデルを用いて感情状態を自動的に推定する手法である。本研究では，**EEG 信号を入力**として用い，感情に関連する**時系列的および空間的特徴**を学習する。さらに，**Valence（快‐不快）および Arousal（覚醒度） といった感情次元空間上で感情をモデル化・予測することで，人間の感情反応を客観的に定量化・識別**することを目的とする。
 
 ## クロスビデオ情動識別（英訳：Cross-Video Emotion Recognition）とは？
 
-![image.png](image\image7.png)
+![image.png](image/image7.png)
 
 本研究が定義する「クロスビデオ情動識別」とは、モデルが訓練時に一部のビデオ刺激（video stimuli）下で収集された生理信号（EEG/ECG等）のみを学習し、テスト時には未学習の新しいビデオによって誘発された情動状態を予測することを指します。
 
@@ -217,7 +219,7 @@ DEAP、AMIGOS、DREAMERなどの公開データセットにおいて、感情ラ
 
 ## 留一交差検証 (Leave-One-Video-Out, LOVO)
 
-![image.png](image\image8.png)
+![image.png](image/image8.png)
 
 **Leave-One-Video-Out（LOVO）** は、モデルの**クロスビデオ汎化性能**を評価するための検証手法です。
 
@@ -273,7 +275,7 @@ DEAP、AMIGOS、DREAMERなどの公開データセットにおいて、感情ラ
 
 ### 共通参照に平均化
 
-![image.png](image\image9.png)
+![image.png](image/image9.png)
 
 DREAMER データセットは，他の 2 つのデータセットと比較して共通参照への平均化が行われていません。そのため，データセット間でデータ処理フローを統一する目的で，本研究では DREAMER データセットに対して共通参照平均化を手動で実施し，併せて外れ値の除去を行います。
 
@@ -407,7 +409,9 @@ def compute_PSD(window_signal, low, high, fs=128):
 
 ## 2D-CNN
 
-![image.png](image\image10.png)
+<p align="center">
+  <img src="image/image10.png" width="80%"/>
+</p>
 
 **2D-CNN モデル（2 次元畳み込みニューラルネットワーク）** は、EEG の**空間―周波数表現**から情動に関連する判別的特徴を学習するための手法である。
 
@@ -417,7 +421,9 @@ def compute_PSD(window_signal, low, high, fs=128):
 
 ## CNN-Transformer
 
-![image.png](image\image11.png)
+<p align="center">
+  <img src="image/image11.png" width="40%"/>
+</p>
 
 **CNN-Transformer モデル**は、1 次元 CNN と Transformer Encoder を組み合わせ、**生の EEG 脳波時系列データ**から情動に関する特徴を直接学習するためのモデルです。
 
@@ -429,7 +435,9 @@ def compute_PSD(window_signal, low, high, fs=128):
 
 ## **Fine-Tuning Pre-Trained Model**
 
-![image.png](image\image12.png)
+<p align="center">
+  <img src="image/image12.png" width="60%"/>
+</p>
 
 事前学習モデルのファインチューニング（Fine-tuning）は、転移学習を用いてモデルの性能および汎化能力を向上させる手法です。本研究では、大規模 EEG データを用いて事前学習されたモデルを下流タスクに適用します。
 
